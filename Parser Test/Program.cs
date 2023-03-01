@@ -103,7 +103,7 @@ namespace Parser_Test
                         sqlCommand.ExecuteNonQuery();
                     }
                 }
-                System.Threading.Thread.Sleep(10 * 1000);
+                System.Threading.Thread.Sleep(10 * 60 * 1000); //10 minutes
                 Console.WriteLine("Next");
                 count++;
             }
