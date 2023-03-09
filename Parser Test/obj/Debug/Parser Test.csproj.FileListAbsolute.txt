@@ -33,3 +33,38 @@ C:\Users\lemon\source\repos\Parser Test\Parser Test\bin\Debug\Microsoft.Bcl.Asyn
 C:\Users\lemon\source\repos\Parser Test\Parser Test\bin\Debug\System.Text.Encodings.Web.xml
 C:\Users\lemon\source\repos\Parser Test\Parser Test\bin\Debug\System.Text.Json.xml
 C:\Users\lemon\source\repos\Parser Test\Parser Test\bin\Debug\System.ValueTuple.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\Parser Test.exe.config
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\Parser Test.exe
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\Parser Test.pdb
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\Microsoft.Win32.Registry.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Buffers.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Memory.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Security.AccessControl.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Security.Principal.Windows.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Text.Encoding.CodePages.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Text.Encodings.Web.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Text.Json.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.ValueTuple.dll
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\Microsoft.Win32.Registry.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Buffers.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Memory.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Security.AccessControl.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Security.Principal.Windows.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Text.Encoding.CodePages.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Text.Encodings.Web.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Text.Json.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\bin\Debug\System.ValueTuple.xml
+C:\Users\lemon\source\repos\ParserTest\Parser Test\obj\Debug\Parser Test.csproj.AssemblyReference.cache
+C:\Users\lemon\source\repos\ParserTest\Parser Test\obj\Debug\Parser Test.csproj.SuggestedBindingRedirects.cache
+C:\Users\lemon\source\repos\ParserTest\Parser Test\obj\Debug\Parser Test.csproj.CoreCompileInputs.cache
+C:\Users\lemon\source\repos\ParserTest\Parser Test\obj\Debug\Parser Test.csproj.CopyComplete
+C:\Users\lemon\source\repos\ParserTest\Parser Test\obj\Debug\Parser Test.exe
+C:\Users\lemon\source\repos\ParserTest\Parser Test\obj\Debug\Parser Test.pdb

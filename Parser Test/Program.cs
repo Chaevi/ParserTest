@@ -23,7 +23,6 @@ namespace Parser_Test
             // Request
             Uri uri = new Uri(uriRequestLink);
             StringContent stringContent;
-            Root root;
             HttpResponseMessage response;
             string resultContent;
 
@@ -46,25 +45,47 @@ namespace Parser_Test
             List<Content> contents; // List response content
             FieldInfo[] fields; // Fields of class Content
 
+            // Counters
+            int count = 0; // page counter
+            int update, insert;
+            DateTime temp, totalTimeIteration;
+
             // LOOP -----------------------------------------------
-            int count = 0;
             do
             {
+                totalTimeIteration = DateTime.Now;
+                Console.WriteLine("========================");
+                update = insert = 0;
                 if (sqlConnection.State != System.Data.ConnectionState.Open)
                     break;
                 // GETTING DATA -----------------------------------------------
-                stringContent = new StringContent(GetRequestString(count, 20));
+                Console.WriteLine("------REQUEST-------");
+                temp = DateTime.Now;
+
+                stringContent = new StringContent(GetRequestString(count, 700));
                 response = httpClient.PostAsync(uri, stringContent).Result;
                 resultContent = response.Content.ReadAsStringAsync().Result;
-                root = JsonSerializer.Deserialize<Root>(resultContent);
-                httpClient.CancelPendingRequests();
 
                 Console.WriteLine(response.StatusCode.ToString());
                 Console.WriteLine(response.Headers);
+                Console.WriteLine("Time request: " + (DateTime.Now - temp).TotalSeconds + " sec");
 
-                contents = root.data.searchReportWoodDeal.content;
+                contents = JsonSerializer.Deserialize<Root>(resultContent).data.searchReportWoodDeal.content;
+                httpClient.CancelPendingRequests();
+
+                if (contents.Count == 0)
+                {
+                    Console.WriteLine("Pause 10 minutes");
+                    count = 0;
+                    System.Threading.Thread.Sleep(10 * 60 * 1000); // 10 minutes
+                    continue;
+                }
+
+                // PUT TO DATABASE -------------------------------------------
+                Console.WriteLine("------SQL-------");
                 fields = typeof(Content).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
+                temp = DateTime.Now;
                 foreach (Content item in contents)
                 {
                     reader?.Close();
@@ -79,16 +100,22 @@ namespace Parser_Test
                         for (int i = 0; i < fields.Length - 1; i++)
                         {
                             //format field to string name and value
-                            string name = fields[i].Name;
+                            string name, value;
+                            name = fields[i].Name;
                             name = name.Substring(1, name.IndexOf('>') - 1);
-                            string value = fields[i].GetValue(item).ToString();
 
-                            if (value != reader[i].ToString()) // If it does not match, replace
+                            if (fields[i].GetValue(item) == null)
+                                value = "";
+                            else
+                                value = fields[i].GetValue(item).ToString();
+
+                            if (value.Length > reader[i].ToString().Length) // If it does not match, replace
                             {
-                                Console.WriteLine("UPDATE");
+                                //Console.WriteLine("UPDATE");
                                 Console.WriteLine(item.dealNumber);
                                 Console.WriteLine(value + " -> " + reader[i].ToString());
                                 sqlCommand.CommandText += GetUpdateString(name, value, item.dealNumber);
+                                update++;
                             }
                         }
                         reader.Close();
@@ -97,14 +124,18 @@ namespace Parser_Test
                     }
                     else
                     {
-                        Console.WriteLine("INSERT");
+                        //Console.WriteLine("INSERT");
                         reader.Close();
                         sqlCommand.CommandText = GetInsertString(item);
                         sqlCommand.ExecuteNonQuery();
+                        insert++;
                     }
                 }
-                System.Threading.Thread.Sleep(10 * 60 * 1000); //10 minutes
-                Console.WriteLine("Next");
+                Console.WriteLine("Time sql: " + (DateTime.Now - temp).TotalSeconds + " sec");
+                Console.WriteLine($"Updated: {update} \nInserted: {insert}");
+
+                Console.WriteLine("Total time iteration: " + (DateTime.Now - totalTimeIteration).TotalSeconds + " sec");
+                Console.WriteLine($"Current page: {count}");
                 count++;
             }
             while (!Console.KeyAvailable);
@@ -116,27 +147,21 @@ namespace Parser_Test
 
             string GetRequestString(int pageNumber, int size)
             {
-                string query = "{\"query\":\"query SearchReportWoodDeal($size: Int!, $number: Int!, $filter: Filter, $orders: [Order!]) {" +
-                    "\\n  searchReportWoodDeal(filter: $filter, pageable: {number: $number, size: $size}, orders: $orders) {" +
-                    "\\n    content {" +
-                    "\\n      sellerName" +
-                    "\\n      sellerInn" +
-                    "\\n      buyerName" +
-                    "\\n      buyerInn" +
-                    "\\n      woodVolumeBuyer" +
-                    "\\n      woodVolumeSeller" +
-                    "\\n      dealDate" +
-                    "\\n      dealNumber" +
-                    "\\n      __typename" +
-                    "\\n    }" +
-                    "\\n    __typename" +
-                    "\\n  }" +
-                    "\\n}" +
-                    "\\n\",";
-                string variables = "\"variables\":{\"size\":" + size + ",\"number\":" + pageNumber + ",\"filter\":null,\"orders\":null},";
-                string operationName = "\"operationName\":\"SearchReportWoodDeal\"}";
+                string query = "{\"query\":\"query SearchReportWoodDeal($size: Int!, $number: Int!) {" +
+                    " searchReportWoodDeal(pageable: {number: $number, size: $size}) {" +
+                    " content {" +
+                    " sellerName" +
+                    " sellerInn" +
+                    " buyerName" +
+                    " buyerInn" +
+                    " woodVolumeBuyer" +
+                    " woodVolumeSeller" +
+                    " dealDate" +
+                    " dealNumber" +
+                    "}}}\",";
+                string variables = "\"variables\":{\"size\":" + size + ",\"number\":" + pageNumber + "}}";
 
-                return query + variables + operationName;
+                return query + variables;
             }
             string GetSelectString(string dealNumber)
             {
@@ -154,6 +179,11 @@ namespace Parser_Test
             }
             string GetInsertString(Content item)
             {
+                if (item.sellerName != null)
+                    item.sellerName = item.sellerName.Replace("'", "''");
+                if (item.buyerName != null)
+                    item.buyerName = item.buyerName.Replace("'", "''");
+
                 string str = "INSERT INTO [Content] VALUES(" +
                             $"'{item.dealNumber}'," +
                             $"'{item.sellerName}'," +
@@ -167,6 +197,8 @@ namespace Parser_Test
             }
             string GetUpdateString(string columName, string value, string dealNumber)
             {
+                if (value != null)
+                    value = value.Replace("'", "''");
                 string str = "UPDATE [Content] " +
                     $"SET {columName} = '{value}' " +
                     $"WHERE dealNumber = '{dealNumber}' ";
@@ -186,7 +218,6 @@ namespace Parser_Test
         public string dealDate { get; set; }
         public double woodVolumeBuyer { get; set; }
         public double woodVolumeSeller { get; set; }
-        public string __typename { get; set; }
     }
 
     public class Data
@@ -202,7 +233,6 @@ namespace Parser_Test
     public class SearchReportWoodDeal
     {
         public List<Content> content { get; set; }
-        public string __typename { get; set; }
     }
     #endregion
 }
